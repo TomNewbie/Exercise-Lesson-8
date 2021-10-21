@@ -166,7 +166,7 @@ void reshape(int *arr, int x, int y, int *new_array){
     }
 }
 
-void compare_greater_than(int *arr, int x, int y, int num, char         *new_array){
+void compare_greater_than(int *arr, int x, int y, int num, char *new_array){
     for(int i = 0; i < x*y; i++){
         if(arr[i] <= num ){
             new_array[i] = 'F';
@@ -177,78 +177,140 @@ void compare_greater_than(int *arr, int x, int y, int num, char         *new_arr
     }
 }
 
-int main(){
-    //Min max axis 0 - 1;
-    int array[3][2] = {{1, 2}, {3, 4}, {5, 6}};
-    int *ptr;
-    ptr = (int *) array;        
-    int newarray_axis_0[2]; 
-    int newarray_axis_1[3];  
- 
-    print2D_array(ptr, 3, 2);
-
-    axis_0( "min" ,ptr, 3, 2, newarray_axis_0);  
-    axis_0( "Max" ,ptr, 3, 2, newarray_axis_0);  
-
-    axis_1( "min" ,ptr, 3, 2, newarray_axis_1);
-    axis_1( "Max" ,ptr, 3, 2, newarray_axis_1);
-
-    //Sum function
-    int sum = sum_all(ptr, 3, 2);
-    printf("\n Sum all : %d\n", sum);
-    sum_axis_0(ptr, 3, 2, newarray_axis_0);
-    sum_axis_1(ptr, 3, 2, newarray_axis_1);
-
-    //Transpose
-    int square_arr[3][4] = {{1, 2, 3, 6}, {4, 5, 6, 9}, {7, 8, 9, 69}};
-    int new_array[4][3];
-    transpose(&square_arr[0][0], 3, 4, &new_array[0][0]);
-    printf("Old matrix: ");
-    print2D_array(&square_arr[0][0], 3, 4);
-    printf("New matrix: ");    
-    print2D_array(&new_array[0][0], 4, 3);
-
-    //Vstack function
-    int arr1[] = {6, 9, 69, 100};
-    int arr2[] = {9, 6, 96, 169};
-    int new_array2[2][4];
-    vstack(arr1, arr2, 4, &new_array2[0][0]);
-    printf("array 1: ");
-    print2D_array(arr1, 1, 4);
-    printf("array 2: ");
-    print2D_array(arr2, 1, 4);
-    printf("New array: ");
-    print2D_array(&new_array2[0][0], 2, 4);
-
-    //Flatten the new_array2
-    int arr3[8];
-    flatten(&new_array2[0][0], arr3, 4);
-    printf("Previous array: ");   
-    print2D_array(&new_array2[0][0], 2, 4);
-    printf("array 3: ");
-    print2D_array(arr3, 1, 8);
-
-    //Reshape
-    int square_arr2[3][4] = {{1, 2, 3, 6}, {4, 5, 6, 9}, {7, 8, 9, 69}};
-    int reshape_arr[4][3];
-    reshape(&square_arr2[0][0], 3, 4, &reshape_arr[0][0]);
-    printf("array: ");   
-    print2D_array(&square_arr2[0][0], 3, 4);
-    printf("new array: ");
-    print2D_array(&reshape_arr[0][0], 4, 3);
-
-    //Compare 
-    int square_arr3[3][4] = {{1, 2, 3, 1}, {-2, 5, 6, 1}, {0, 8, -1, 2}};
-    char arr_result[3][4];
-    print2D_array(&square_arr3[0][0], 3, 4);
-    compare_greater_than(&square_arr3[0][0], 3, 4, 2, &arr_result[0][0]);
-    for(int i = 0; i < 3; i++){
-        for(int j = 0; j < 4; j++){
-            printf("%c   ", arr_result[i][j]);
-        }
-        printf("\n");
+void vector_matrix_mul (int *matrix, int *arr, int a, int x, int y, int *output){
+    if(a){
+        for(int i = 0; i < x; i++){
+            int sum = 0;
+            for(int j = 0; j < y; j++){
+                sum = sum + matrix[j*y + i] * arr[j];
+            }
+        output[i] = sum;
+    }    
+    }
+    else{
+        for(int i = 0; i < x; i++){
+            int sum = 0;
+            for(int j = 0; j < y; j++){
+                sum = sum + matrix[i*y + j] * arr[j];
+            }
+        output[i] = sum;
+    }    
     }
     
+}
+
+void matrix_mul(int *matrix1, int *matrix2, int x, int y, int *output){
+        for(int i = 0; i < x; i++){
+            vector_matrix_mul(matrix2, &matrix1[i*y], 1, x, y, &output[i*y]);
+        }
+    }
+int main(){
+    // //Min max axis 0 - 1;
+    // int array[3][2] = {{1, 2}, {3, 4}, {5, 6}};
+    // int *ptr;
+    // ptr = (int *) array;        
+    // int newarray_axis_0[2]; 
+    // int newarray_axis_1[3];  
+ 
+    // print2D_array(ptr, 3, 2);
+
+    // axis_0( "min" ,ptr, 3, 2, newarray_axis_0);  
+    // axis_0( "Max" ,ptr, 3, 2, newarray_axis_0);  
+
+    // axis_1( "min" ,ptr, 3, 2, newarray_axis_1);
+    // axis_1( "Max" ,ptr, 3, 2, newarray_axis_1);
+
+    // //Sum function
+    // int sum = sum_all(ptr, 3, 2);
+    // printf("\n Sum all : %d\n", sum);
+    // sum_axis_0(ptr, 3, 2, newarray_axis_0);
+    // sum_axis_1(ptr, 3, 2, newarray_axis_1);
+
+    // //Transpose
+    // int square_arr[3][4] = {{1, 2, 3, 6}, {4, 5, 6, 9}, {7, 8, 9, 69}};
+    // int new_array[4][3];
+    // transpose(&square_arr[0][0], 3, 4, &new_array[0][0]);
+    // printf("Old matrix: ");
+    // print2D_array(&square_arr[0][0], 3, 4);
+    // printf("New matrix: ");    
+    // print2D_array(&new_array[0][0], 4, 3);
+    
+
+    // //Vstack function
+    // int arr1[] = {6, 9, 69, 100};
+    // int arr2[] = {9, 6, 96, 169};
+    // int new_array2[2][4];
+    // vstack(arr1, arr2, 4, &new_array2[0][0]);
+    // printf("array 1: ");
+    // print2D_array(arr1, 1, 4);
+    // printf("array 2: ");
+    // print2D_array(arr2, 1, 4);
+    // printf("New array: ");
+    // print2D_array(&new_array2[0][0], 2, 4);
+
+    // //Flatten the new_array2
+    // int arr3[8];
+    // flatten(&new_array2[0][0], arr3, 4);
+    // printf("Previous array: ");   
+    // print2D_array(&new_array2[0][0], 2, 4);
+    // printf("array 3: ");
+    // print2D_array(arr3, 1, 8);
+
+    // //Reshape
+    // int square_arr2[3][4] = {{1, 2, 3, 6}, {4, 5, 6, 9}, {7, 8, 9, 69}};
+    // int reshape_arr[4][3];
+    // reshape(&square_arr2[0][0], 3, 4, &reshape_arr[0][0]);
+    // printf("array: ");   
+    // print2D_array(&square_arr2[0][0], 3, 4);
+    // printf("new array: ");
+    // print2D_array(&reshape_arr[0][0], 4, 3);
+
+    // //Compare 
+    // int square_arr3[3][4] = {{1, 2, 3, 1}, {-2, 5, 6, 1}, {0, 8, -1, 2}};
+    // char arr_result[3][4];
+    // print2D_array(&square_arr3[0][0], 3, 4);
+    // compare_greater_than(&square_arr3[0][0], 3, 4, 2, &arr_result[0][0]);
+    // for(int i = 0; i < 3; i++){
+    //     for(int j = 0; j < 4; j++){
+    //         printf("%c   ", arr_result[i][j]);
+    //     }
+    //     printf("\n");
+    // }
+
+   // Dot product
+   printf("hello");
+    int matrix[2][2] ={{1, 2}, {3, 4}};  
+    int array6[2] = {1, 2};
+    int result6[2];
+    int result7[2];
+
+    vector_matrix_mul(&matrix[0][0], &array6[0], 0, 2, 2, &result6[0]);
+
+    vector_matrix_mul(&matrix[0][0], &array6[0], 1, 2, 2, &result7[0]);
+
+    print2D_array(&matrix[0][0], 2, 2);
+
+    print2D_array(&array6[0], 2, 1);
+    print2D_array(&result6[0], 2, 1);
+    print2D_array(&result7[0], 2, 1);
+
+    int matrix2[2][2] ={{1, 2}, {3, 4}};  
+    int matrix3[2][2] ={{2, 3}, {2, 1}};
+    int matrix4[2][2];   
+    int matrix5[2][2];
+
+    matrix_mul(&matrix2[0][0], &matrix3[0][0], 2, 2, &matrix4[0][0]);
+    print2D_array(&matrix2[0][0], 2, 2); 
+    print2D_array(&matrix3[0][0], 2, 2);  
+ 
+    print2D_array(&matrix4[0][0], 2, 2);  
+    matrix_mul(&matrix3[0][0], &matrix2[0][0], 2, 2, &matrix5[0][0]);
+
+    print2D_array(&matrix5[0][0], 2, 2); 
+
+    printf("end");
+
+
     return 0;
 
 }
