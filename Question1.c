@@ -191,7 +191,7 @@ void vector_matrix_mul (int *matrix, int *arr, int a, int x, int y, int *output)
         for(int i = 0; i < x; i++){
             int sum = 0;
             for(int j = 0; j < y; j++){
-                sum = sum + matrix[i*y + j] * arr[j];
+                sum = sum + matrix[i*y + j] * arr[j]; 
             }
         output[i] = sum;
     }    
